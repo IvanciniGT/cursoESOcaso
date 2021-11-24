@@ -1,0 +1,11 @@
+version: '3.0'
+services:
+
+  apache:
+    image: httpd # docker hub
+    container_name: apache
+    ports:
+      - 81:80
+    volumes:
+      - ./httpd.conf:/usr/local/apache2/conf/httpd.conf   # Inyectar mi fichero de conf dentro del contenedor
+      - /home/ubuntu/environment/datos/apache:/usr/local/apache2/logs # Extraer los logs del contenedor

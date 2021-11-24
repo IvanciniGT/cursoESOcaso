@@ -1,0 +1,12 @@
+version: '3.0'
+services:
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.7.0
+    container_name: filebeat
+    volumes:
+      # Inyectar el archivo de log para que filebeat lo pueda leer
+      - /home/ubuntu/environment/datos/apache/access_log:/datos/access_log
+      # Inyectar el archivo de conf donde decimos 
+      # que archivo debe leer filebeat y donde mandarlo
+      - ./filebeat-config.yml:/usr/share/filebeat/filebeat.yml:ro

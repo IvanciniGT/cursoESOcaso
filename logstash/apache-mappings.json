@@ -1,0 +1,13 @@
+{
+    "index_patterns": ["apache-*"],
+    "mappings": {
+        "properties": {
+            "ip": {"type": "ip"},
+            "geoip": {
+                "properties": {
+                    "location": { "type": "geo_point"}
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,66 @@
+version: '3.0'
+services:
+
+  nodo1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: nodo1
+    ports:
+      - 8080:9200
+    volumes:
+      - /home/ubuntu/environment/datos/nodo1:/usr/share/elasticsearch/data
+      # En un entorno real... donde estarían los datos... en el host?
+      # En una cabina de almacenamiento con redundancia
+    environment:
+      - node.name=nodo1
+      - cluster.name=MiCluster
+      - discovery.seed_hosts=nodo2,nodo3
+      - cluster.initial_master_nodes=nodo1,nodo2,nodo3
+      - "ES_JAVA_OPTS=-Xms300m -Xmx300m"
+      - cluster.routing.allocation.disk.threshold_enabled=false
+#      - bootstrap.memory_lock=true # Desactivar el swapping para la memoria de elastic
+      
+  nodo2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: nodo2
+    volumes:
+      - /home/ubuntu/environment/datos/nodo2:/usr/share/elasticsearch/data
+    environment:
+      - node.name=nodo2
+      - cluster.name=MiCluster
+      - discovery.seed_hosts=nodo1,nodo3
+      - cluster.initial_master_nodes=nodo1,nodo2,nodo3
+      - "ES_JAVA_OPTS=-Xms300m -Xmx300m"
+      - cluster.routing.allocation.disk.threshold_enabled=false
+#      - bootstrap.memory_lock=true # Desactivar el swapping para la memoria de elastic
+
+  nodo3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: nodo3
+    volumes:
+      - /home/ubuntu/environment/datos/nodo3:/usr/share/elasticsearch/data
+    environment:
+      - node.name=nodo3
+      - cluster.name=MiCluster
+      - discovery.seed_hosts=nodo1,nodo2
+      - cluster.initial_master_nodes=nodo1,nodo2,nodo3
+      - "ES_JAVA_OPTS=-Xms300m -Xmx300m"
+      - cluster.routing.allocation.disk.threshold_enabled=false
+ ##      - bootstrap.memory_lock=true Desactivar el swapping para la memoria de elastic
+
+  cerebro:
+    image: lmenezes/cerebro:0.8.5
+    container_name: cerebro
+    ports:
+      - 8081:9000
+    volumes:
+      - ./application.conf:/opt/cerebro/conf/application.conf
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.7.0
+    container_name: kibana
+    ports:
+      - 8082:5601
+    environment:
+      ELASTICSEARCH_HOSTS: "http://nodo1:9200"
+      SERVER_NAME: "kibana"
+      SERVER_HOST: "kibana"

@@ -1,0 +1,7 @@
+filebeat.inputs:
+    - type: log
+      paths:
+       - /datos/access_log
+
+output.logstash:
+    hosts: ["172.31.15.234:5044"]

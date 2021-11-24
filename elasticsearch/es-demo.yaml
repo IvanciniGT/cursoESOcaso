@@ -1,0 +1,16 @@
+version: '3.0'
+services:
+
+  nodo1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: nodo1
+    ports:
+      - 8080:9200  # ES funciona en el puerto 9200
+                   # Pero me gustaria poder acceder a ES des el puerto 8080 del host
+    volumes:
+      - /home/ubuntu/environment/datos/nododemo:/usr/share/elasticsearch/data
+        # ES guarda los datos en la carpeta  /usr/share/elasticsearch/data
+        # Pero quiero que esa carpeta realmente se almacene en el host
+        # en la carpeta /home/ubuntu/environment/datos/nododemo
+    environment:
+      - discovery.type=single-node

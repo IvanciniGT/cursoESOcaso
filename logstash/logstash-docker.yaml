@@ -1,0 +1,11 @@
+version: '3.0'
+services:
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.7.0
+    container_name: logstash
+    ports:
+      - 5044:5044
+    volumes:
+      - ./logstash-config.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./apache-mappings.json:/plantillas/apache-mappings.json
